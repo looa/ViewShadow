@@ -28,8 +28,8 @@ public class MyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set content view, etc.
-        ViewCompat.setElevation(view, elevation);
-        ViewCompat.setElevation(view, elevation, color);
+        ViewShadow.setElevation(view, elevation);
+        ViewShadow.setElevation(view, elevation, color);
     }
 }
  ```
