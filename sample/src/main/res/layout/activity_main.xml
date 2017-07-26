@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f9f9f9"
+    tools:context="org.looa.viewshadow.MainActivity">
+
+
+    <TextView
+        android:id="@+id/tv_toast"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/selector_icon"
+        android:gravity="center"
+        android:shadowColor="#40000000"
+        android:shadowDx="20"
+        android:shadowDy="20"
+        android:shadowRadius="20"
+        android:text="Hello World!"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_toast2"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/tv_toast"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/selector_icon"
+        android:gravity="center"
+        android:shadowColor="#40000000"
+        android:shadowDx="20"
+        android:shadowDy="20"
+        android:shadowRadius="20"
+        android:text="Hello World!"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_toast3"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/tv_toast2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/selector_icon"
+        android:gravity="center"
+        android:shadowColor="#40000000"
+        android:shadowDx="20"
+        android:shadowDy="20"
+        android:shadowRadius="20"
+        android:text="Hello World!"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tv_square"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="80dp"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:textColor="#696969"
+        android:textSize="11sp"
+        tools:text="Try" />
+
+    <TextView
+        android:id="@+id/tv_circle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="90dp"
+        android:layout_toLeftOf="@id/tv_square"
+        android:background="@drawable/selector_icon"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        tools:text="Try" />
+
+
+    <!--<include layout="@layout/layout_test" />-->
+
+</RelativeLayout>
