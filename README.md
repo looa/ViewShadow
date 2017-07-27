@@ -5,7 +5,7 @@
 ## Usage
 
 ```groovy
-compile 'com.github.looa:ViewShadow:1.0.0'
+compile 'com.github.looa:ViewShadow:1.1.0'
 ```
 
 ## Intro
@@ -13,6 +13,9 @@ ViewShadow是能为Android应用中任意视图加载阴影效果的工具类。
 <br>
 ViewShadow is a simple class you can use in your Android application
 to load shadows for your view.
+<br>
+<br>
+注意，该工具只支持渲染阴影，并不支持高度设定。
  
 Sample
 -----
