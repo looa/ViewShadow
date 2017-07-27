@@ -13,6 +13,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import java.lang.reflect.Field;
 
@@ -46,18 +47,37 @@ public class ViewShadow {
      */
     public static void setElevation(View view, float elevation, int color) {
         if (view == null) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && color == DEFAULT_SHADOW_COLOR) {
-            view.setElevation(elevation);
-        } else {
-            ShadowData data = new ShadowData();
-            Context context = view.getContext().getApplicationContext();
-            data.shadowRadius = elevation > 0 ? (int) elevation : SHADOW_RADIUS;
-            data.dx = Math.abs(dip2px(context, OFFSET_X));
-            data.dy = dip2px(context, data.shadowRadius / 5f);
-            data.inner = dip2px(context, data.shadowRadius / 7f);
-            data.color = color;
-            AddShadowRunnable runnable = new AddShadowRunnable(view, data);
-            view.post(runnable);
+        ShadowData data = new ShadowData();
+        Context context = view.getContext().getApplicationContext();
+        data.shadowRadius = elevation > 0 ? (int) elevation : SHADOW_RADIUS;
+        data.dx = Math.abs(dip2px(context, OFFSET_X));
+        data.dy = dip2px(context, data.shadowRadius / 6f);
+        data.inner = dip2px(context, data.shadowRadius / 10f);
+        data.color = color;
+        AddShadowRunnable runnable = new AddShadowRunnable(view, data);
+        view.post(runnable);
+        ViewTreeObserver vto = view.getViewTreeObserver();
+        GlobalLayoutListener layoutListener = new GlobalLayoutListener(view, data);
+        vto.addOnGlobalLayoutListener(layoutListener);
+    }
+
+    private static class GlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        private View view;
+        private ShadowData data;
+
+        GlobalLayoutListener(View view, ShadowData data) {
+            this.view = view;
+            this.data = data;
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            if (data.shadow == null) return;
+            int top = view.getTop() - data.shadowRadius - data.dy;
+            int left = view.getLeft() - data.shadowRadius - data.dx;
+            data.shadow.setTranslationX(left);
+            data.shadow.setTranslationY(top);
         }
     }
 
@@ -69,6 +89,8 @@ public class ViewShadow {
         int dy;
         int inner;
         int color;
+
+        View shadow;
     }
 
     private static class AddShadowRunnable implements Runnable {
@@ -90,6 +112,7 @@ public class ViewShadow {
             int left = view.getLeft() - data.shadowRadius - data.dx;
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
             View vShadow = new View(view.getContext());
+            data.shadow = vShadow;
             vShadow.setLayoutParams(layoutParams);
             vShadow.setTranslationX(left);
             vShadow.setTranslationY(top);
@@ -159,7 +182,7 @@ public class ViewShadow {
         Canvas canvas = new Canvas(output);
         RectF shadowRect = new RectF(
                 shadowRadius + inner,
-                shadowRadius + Math.abs(dy),
+                shadowRadius + Math.abs(dy) - inner,
                 shadowWidth - shadowRadius - inner,
                 shadowHeight - shadowRadius);
 
