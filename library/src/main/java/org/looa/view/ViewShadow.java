@@ -30,7 +30,7 @@ public class ViewShadow {
     private static final int DEFAULT_SHADOW_COLOR = Color.parseColor("#4a000000");
 
     /**
-     * 设置阴影，默认颜色为#55000000
+     * 设置阴影，默认颜色为#4a000000
      *
      * @param view      需要添加阴影的控件
      * @param elevation 高度
