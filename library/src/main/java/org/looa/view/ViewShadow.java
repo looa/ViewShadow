@@ -26,7 +26,8 @@ public class ViewShadow {
 
     private static final int SHADOW_RADIUS = 4;
     private static final int OFFSET_X = 0;
-    private static final int DEFAULT_SHADOW_COLOR = Color.parseColor("#55000000");
+    private static final int TOP_DY = 3;
+    private static final int DEFAULT_SHADOW_COLOR = Color.parseColor("#4a000000");
 
     /**
      * 设置阴影，默认颜色为#55000000
@@ -53,6 +54,7 @@ public class ViewShadow {
         data.dx = Math.abs(dip2px(context, OFFSET_X));
         data.dy = dip2px(context, data.shadowRadius / 6f);
         data.inner = dip2px(context, data.shadowRadius / 10f);
+        data.top = dip2px(context, TOP_DY);
         data.color = color;
         AddShadowRunnable runnable = new AddShadowRunnable(view, data);
         view.post(runnable);
@@ -89,6 +91,7 @@ public class ViewShadow {
         int dy;
         int inner;
         int color;
+        int top;
 
         View shadow;
     }
@@ -126,6 +129,7 @@ public class ViewShadow {
                     data.shadowRadius,
                     data.dx,
                     data.dy,
+                    data.top,
                     data.inner,
                     data.color,
                     Color.TRANSPARENT);
@@ -145,12 +149,17 @@ public class ViewShadow {
         Drawable currentDrawable = background.getCurrent();
         if (currentDrawable instanceof GradientDrawable) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                float[] radii = ((GradientDrawable) currentDrawable).getCornerRadii();
-                if (radii == null) {
+                try {
+                    float[] radii = ((GradientDrawable) currentDrawable).getCornerRadii();
+                    if (radii == null) {
+                        float radius = ((GradientDrawable) currentDrawable).getCornerRadius();
+                        return new float[]{radius, radius, radius, radius, radius, radius, radius, radius};
+                    } else {
+                        return radii;
+                    }
+                } catch (Exception e) {
                     float radius = ((GradientDrawable) currentDrawable).getCornerRadius();
-                    return new float[]{radius, radius, radius, radius};
-                } else {
-                    return radii;
+                    return new float[]{radius, radius, radius, radius, radius, radius, radius, radius};
                 }
             } else {
                 try {
@@ -162,7 +171,7 @@ public class ViewShadow {
                         Field mRadius = c.getDeclaredField("mRadius");
                         mRadius.setAccessible(true);
                         float radius = (float) mRadius.get(currentDrawable.getConstantState());
-                        return new float[]{radius, radius, radius, radius};
+                        return new float[]{radius, radius, radius, radius, radius, radius, radius, radius};
                     } else {
                         return radii;
                     }
@@ -176,13 +185,13 @@ public class ViewShadow {
     }
 
     private static Bitmap createShadowBitmap(int shadowWidth, int shadowHeight, float[] cornerRadius, float shadowRadius,
-                                             float dx, float dy, int inner, int shadowColor, int fillColor) {
+                                             float dx, float dy, int top, int inner, int shadowColor, int fillColor) {
         Bitmap.Config config = shadowColor == DEFAULT_SHADOW_COLOR ? Bitmap.Config.ALPHA_8 : Bitmap.Config.ARGB_8888;
         Bitmap output = Bitmap.createBitmap(shadowWidth, shadowHeight, config);
         Canvas canvas = new Canvas(output);
         RectF shadowRect = new RectF(
                 shadowRadius + inner,
-                shadowRadius + Math.abs(dy) - inner,
+                shadowRadius + Math.abs(dy) - top,
                 shadowWidth - shadowRadius - inner,
                 shadowHeight - shadowRadius);
 
