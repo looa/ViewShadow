@@ -55,6 +55,7 @@ public class ViewShadow {
         data.dy = dip2px(context, data.shadowRadius / 6f);
         data.inner = dip2px(context, data.shadowRadius / 10f);
         data.top = dip2px(context, TOP_DY);
+        data.top = data.top < data.dy ? data.top : 0;
         data.color = color;
         AddShadowRunnable runnable = new AddShadowRunnable(view, data);
         view.post(runnable);
