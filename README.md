@@ -20,7 +20,7 @@ to load shadows for your view.
 Sample
 -----
  
- ![screenshots](./screenshot/device-2017-07-26-173930.png)
+ ![screenshots](../screenshot/device-2017-07-28-145236.png)
 
 Quick Start
 -----
@@ -38,4 +38,4 @@ public class MyActivity extends Activity {
  ```
 
 
-Please refer to the documentation in ViewServer.java for more info.
+Please refer to the documentation in ViewShadow.java for more info.
