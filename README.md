@@ -5,7 +5,18 @@
 ## Usage
 
 ```groovy
-compile 'com.github.looa:ViewShadow:1.1.0'
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+```
+
+```groovy
+dependencies {
+	compile 'com.github.looa:ViewShadow:1.1.1'
+}
 ```
 
 ## Intro
