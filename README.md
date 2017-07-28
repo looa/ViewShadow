@@ -20,7 +20,7 @@ to load shadows for your view.
 Sample
 -----
  
- ![screenshots](../screenshot/device-2017-07-28-145236.png)
+ ![screenshots](./screenshot/device-2017-07-28-145236.png)
 
 Quick Start
 -----
