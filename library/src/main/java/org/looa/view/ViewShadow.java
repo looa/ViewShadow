@@ -61,7 +61,26 @@ public class ViewShadow {
         view.post(runnable);
         ViewTreeObserver vto = view.getViewTreeObserver();
         GlobalLayoutListener layoutListener = new GlobalLayoutListener(view, data);
+        PreDrawListener preDrawListener = new PreDrawListener(view, data);
         vto.addOnGlobalLayoutListener(layoutListener);
+        vto.addOnPreDrawListener(preDrawListener);
+    }
+
+    private static class PreDrawListener implements ViewTreeObserver.OnPreDrawListener {
+
+        private View view;
+        private ShadowData data;
+
+        PreDrawListener(View view, ShadowData data) {
+            this.view = view;
+            this.data = data;
+        }
+
+        @Override
+        public boolean onPreDraw() {
+            trackTargetView(view, data);
+            return true;
+        }
     }
 
     private static class GlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
@@ -76,12 +95,16 @@ public class ViewShadow {
 
         @Override
         public void onGlobalLayout() {
-            if (data.shadow == null) return;
-            int top = view.getTop() - data.shadowRadius - data.dy;
-            int left = view.getLeft() - data.shadowRadius - data.dx;
-            data.shadow.setTranslationX(left);
-            data.shadow.setTranslationY(top);
+            trackTargetView(view, data);
         }
+    }
+
+    private static void trackTargetView(View view, ShadowData data) {
+        if (data.shadow == null || view == null) return;
+        int top = (int) (view.getY() - data.shadowRadius - data.dy);
+        int left = (int) (view.getX() - data.shadowRadius - data.dx);
+        if (left != data.shadow.getTranslationX()) data.shadow.setTranslationX(left);
+        if (top != data.shadow.getTranslationY()) data.shadow.setTranslationY(top);
     }
 
 
