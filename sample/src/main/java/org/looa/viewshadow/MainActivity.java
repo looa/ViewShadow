@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvSquare;
     private TextView tvCircle;
 
+    private View vCircle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvToast3 = (TextView) findViewById(R.id.tv_toast3);
         tvSquare = (TextView) findViewById(R.id.tv_square);
         tvCircle = (TextView) findViewById(R.id.tv_circle);
+
+        vCircle = findViewById(R.id.v_circle);
 
         tvToast.setText("ViewCompat");
         tvToast2.setText("ViewShadow");
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ViewShadow.setElevation(tvToast3, elevation, getResources().getColor(R.color.shadow));
         ViewShadow.setElevation(tvSquare, elevation);
         ViewShadow.setElevation(tvCircle, elevation * 2);
+
+        ViewShadow.setElevation(vCircle, 8);
     }
 
     @Override

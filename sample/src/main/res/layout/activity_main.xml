@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f9f9f9"
+    android:background="#ffffff"
     tools:context="org.looa.viewshadow.MainActivity">
 
 
@@ -78,6 +78,14 @@
         android:textColor="@android:color/white"
         tools:text="Try" />
 
+
+    <View
+        android:id="@+id/v_circle"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/shape_circle" />
 
     <!--<include layout="@layout/layout_test" />-->
 
