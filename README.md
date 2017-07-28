@@ -50,3 +50,6 @@ public class MyActivity extends Activity {
 
 
 Please refer to the documentation in ViewShadow.java for more info.
+
+## TODO
+阴影支持跟随View缩放等动画效果。
