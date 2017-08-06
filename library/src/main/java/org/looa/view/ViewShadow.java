@@ -11,11 +11,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 /**
  * add shadow for a view.
@@ -23,6 +25,8 @@ import java.lang.reflect.Field;
  */
 
 public class ViewShadow {
+
+    private static final String TAG = "ViewShadow";
 
     private static final int SHADOW_RADIUS = 4;
     private static final int OFFSET_X = 0;
@@ -57,8 +61,8 @@ public class ViewShadow {
         data.top = dip2px(context, TOP_DY);
         data.top = data.top < data.dy ? data.top : 0;
         data.color = color;
-        AddShadowRunnable runnable = new AddShadowRunnable(view, data);
-        view.post(runnable);
+//        AddShadowRunnable runnable = new AddShadowRunnable(view, data);
+//        view.post(runnable);
         ViewTreeObserver vto = view.getViewTreeObserver();
         GlobalLayoutListener layoutListener = new GlobalLayoutListener(view, data);
         PreDrawListener preDrawListener = new PreDrawListener(view, data);
@@ -95,8 +99,48 @@ public class ViewShadow {
 
         @Override
         public void onGlobalLayout() {
+            createShadowIfNecessary(view, data);
             trackTargetView(view, data);
         }
+    }
+
+    private static void createShadowIfNecessary(View view, ShadowData data) {
+        if (data.shadow != null && view.getWidth() != 0) return;
+        Log.i(TAG, "View: " + view.getClass().getName() + "\ncreateShadowIfNecessary: is running.\n" + data.toString());
+        int width = view.getWidth() + data.shadowRadius * 2 + data.dx * 2;
+        int height = view.getHeight() + data.shadowRadius * 2 + data.dy * 2;
+
+        int top = view.getTop() - data.shadowRadius - data.dy;
+        int left = view.getLeft() - data.shadowRadius - data.dx;
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
+        View vShadow = new View(view.getContext());
+        data.shadow = vShadow;
+        vShadow.setLayoutParams(layoutParams);
+        vShadow.setTranslationX(left);
+        vShadow.setTranslationY(top);
+
+        Drawable drawable = view.getBackground();
+        data.cornerRadius = obtainRadius(drawable);
+
+        Bitmap bitmap = createShadowBitmap(
+                width, height,
+                data.cornerRadius,
+                data.shadowRadius,
+                data.dx,
+                data.dy,
+                data.top,
+                data.inner,
+                data.color,
+                Color.TRANSPARENT);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(view.getResources(), bitmap);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
+            vShadow.setBackgroundDrawable(bitmapDrawable);
+        } else {
+            vShadow.setBackground(bitmapDrawable);
+        }
+        ViewGroup parent = (ViewGroup) view.getParent();
+        parent.addView(vShadow, parent.indexOfChild(view));
     }
 
     private static void trackTargetView(View view, ShadowData data) {
@@ -118,6 +162,19 @@ public class ViewShadow {
         int top;
 
         View shadow;
+
+        @Override
+        public String toString() {
+            return "ShadowData{" +
+                    "cornerRadius=" + Arrays.toString(cornerRadius) +
+                    ", shadowRadius=" + shadowRadius +
+                    ", dx=" + dx +
+                    ", dy=" + dy +
+                    ", inner=" + inner +
+                    ", color=" + color +
+                    ", top=" + top +
+                    '}';
+        }
     }
 
     private static class AddShadowRunnable implements Runnable {
