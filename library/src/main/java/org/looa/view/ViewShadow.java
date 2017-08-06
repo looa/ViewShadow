@@ -103,7 +103,7 @@ public class ViewShadow {
     }
 
     private static void createShadowIfNecessary(View view, ShadowData data) {
-        if (data.shadow != null && view.getWidth() != 0) return;
+        if (view.getWidth() == 0 || data.shadow != null) return;
         Log.i(TAG, "View: " + view.getClass().getName() + "\ncreateShadowIfNecessary: is running.\n" + data.toString());
         int width = view.getWidth() + data.shadowRadius * 2 + data.dx * 2;
         int height = view.getHeight() + data.shadowRadius * 2 + data.dy * 2;
