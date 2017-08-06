@@ -15,7 +15,7 @@ allprojects {
 
 ```groovy
 dependencies {
-	compile 'com.github.looa:ViewShadow:1.1.1'
+	compile 'com.github.looa:ViewShadow:1.1.3'
 }
 ```
 
