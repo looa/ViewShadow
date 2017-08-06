@@ -61,8 +61,6 @@ public class ViewShadow {
         data.top = dip2px(context, TOP_DY);
         data.top = data.top < data.dy ? data.top : 0;
         data.color = color;
-//        AddShadowRunnable runnable = new AddShadowRunnable(view, data);
-//        view.post(runnable);
         ViewTreeObserver vto = view.getViewTreeObserver();
         GlobalLayoutListener layoutListener = new GlobalLayoutListener(view, data);
         PreDrawListener preDrawListener = new PreDrawListener(view, data);
@@ -174,55 +172,6 @@ public class ViewShadow {
                     ", color=" + color +
                     ", top=" + top +
                     '}';
-        }
-    }
-
-    private static class AddShadowRunnable implements Runnable {
-
-        private View view;
-        private ShadowData data;
-
-        AddShadowRunnable(View view, ShadowData data) {
-            this.view = view;
-            this.data = data;
-        }
-
-        @Override
-        public void run() {
-            int width = view.getWidth() + data.shadowRadius * 2 + data.dx * 2;
-            int height = view.getHeight() + data.shadowRadius * 2 + data.dy * 2;
-
-            int top = view.getTop() - data.shadowRadius - data.dy;
-            int left = view.getLeft() - data.shadowRadius - data.dx;
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
-            View vShadow = new View(view.getContext());
-            data.shadow = vShadow;
-            vShadow.setLayoutParams(layoutParams);
-            vShadow.setTranslationX(left);
-            vShadow.setTranslationY(top);
-
-            Drawable drawable = view.getBackground();
-            data.cornerRadius = obtainRadius(drawable);
-
-            Bitmap bitmap = createShadowBitmap(
-                    width, height,
-                    data.cornerRadius,
-                    data.shadowRadius,
-                    data.dx,
-                    data.dy,
-                    data.top,
-                    data.inner,
-                    data.color,
-                    Color.TRANSPARENT);
-            BitmapDrawable bitmapDrawable = new BitmapDrawable(view.getResources(), bitmap);
-
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
-                vShadow.setBackgroundDrawable(bitmapDrawable);
-            } else {
-                vShadow.setBackground(bitmapDrawable);
-            }
-            ViewGroup parent = (ViewGroup) view.getParent();
-            parent.addView(vShadow, parent.indexOfChild(view));
         }
     }
 
