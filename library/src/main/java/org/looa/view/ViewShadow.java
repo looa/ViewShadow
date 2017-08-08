@@ -108,14 +108,13 @@ public class ViewShadow {
         int width = view.getWidth() + data.shadowRadius * 2 + data.dx * 2;
         int height = view.getHeight() + data.shadowRadius * 2 + data.dy * 2;
 
-        int top = view.getTop() - data.shadowRadius - data.dy;
-        int left = view.getLeft() - data.shadowRadius - data.dx;
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
         View vShadow = new View(view.getContext());
-        data.shadow = vShadow;
         vShadow.setLayoutParams(layoutParams);
-        vShadow.setTranslationX(left);
-        vShadow.setTranslationY(top);
+
+        data.shadow = vShadow;
+        data.width = width;
+        data.height = height;
 
         Drawable drawable = view.getBackground();
         data.cornerRadius = obtainRadius(drawable);
@@ -143,10 +142,12 @@ public class ViewShadow {
 
     private static void trackTargetView(View view, ShadowData data) {
         if (data.shadow == null || view == null) return;
-        int top = (int) (view.getY() - data.shadowRadius - data.dy);
-        int left = (int) (view.getX() - data.shadowRadius - data.dx);
-        if (left != data.shadow.getTranslationX()) data.shadow.setTranslationX(left);
+        int top = view.getTop() - data.shadowRadius - data.dy;
+        int left = view.getLeft() - data.shadowRadius - data.dx;
+        top = data.height >= ((ViewGroup) view.getParent()).getHeight() ? 0 : top;
+        left = data.width >= ((ViewGroup) view.getParent()).getWidth() ? 0 : left;
         if (top != data.shadow.getTranslationY()) data.shadow.setTranslationY(top);
+        if (left != data.shadow.getTranslationX()) data.shadow.setTranslationX(left);
     }
 
 
@@ -158,6 +159,7 @@ public class ViewShadow {
         int inner;
         int color;
         int top;
+        int width, height;
 
         View shadow;
 
